@@ -1,5 +1,6 @@
 package com.example.rest.domain.post.post.controller;
 
+import com.example.rest.domain.post.post.dto.PostDto;
 import com.example.rest.domain.post.post.entity.Post;
 import com.example.rest.domain.post.post.service.PostService;
 import com.example.rest.global.dto.RsData;
@@ -22,13 +23,22 @@ public class ApiV1PostController {
 
 
     @GetMapping
-    public List<Post> getItems() {
-        return postService.getItems();
+    public List<PostDto> getItems() {
+
+        List<Post> posts = postService.getItems();
+
+        return posts.stream()
+                .map(PostDto::new)
+                .toList();
     }
 
     @GetMapping("{id}")
-    public Post getItem(@PathVariable long id) {
-        return postService.getItem(id).get();
+    public PostDto getItem(@PathVariable long id) {
+
+        Post post = postService.getItem(id).get();
+        PostDto postDto = new PostDto(post);
+
+        return postDto;
     }
 
 
@@ -67,11 +77,12 @@ public class ApiV1PostController {
     @PostMapping
     public RsData write(@RequestBody @Valid WriteReqBody body) {
 
-        postService.write(body.title(), body.content());
+        Post post = postService.write(body.title(), body.content());
 
         return new RsData(
                 "200-1",
-                "글 작성이 완료되었습니다."
+                "글 작성이 완료되었습니다.",
+                post.getId()
         );
     }
 }
