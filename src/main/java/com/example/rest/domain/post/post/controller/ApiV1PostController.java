@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -23,22 +25,30 @@ public class ApiV1PostController {
 
 
     @GetMapping
-    public List<PostDto> getItems() {
+    public RsData<List<PostDto>> getItems() {
 
         List<Post> posts = postService.getItems();
-
-        return posts.stream()
+        List<PostDto> postDtos = posts.stream()
                 .map(PostDto::new)
                 .toList();
+
+        return new RsData<>(
+                "200-1",
+                "글 조회가 완료되었습니다.",
+                postDtos
+        );
     }
 
     @GetMapping("{id}")
-    public PostDto getItem(@PathVariable long id) {
+    public RsData<PostDto> getItem(@PathVariable long id) {
 
         Post post = postService.getItem(id).get();
-        PostDto postDto = new PostDto(post);
 
-        return postDto;
+        return new RsData<> (
+                "200-1",
+                "글 조회가 완료되었습니다.",
+                new PostDto(post)
+        );
     }
 
 
@@ -61,28 +71,40 @@ public class ApiV1PostController {
     record ModifyReqBody(@NotBlank @Length(min=3) String title, @NotBlank @Length(min=3) String content) {}
 
     @PutMapping("{id}")
-    public RsData modify(@PathVariable long id, @RequestBody @Valid ModifyReqBody body) {
+    public RsData<Void> modify(@PathVariable long id, @RequestBody @Valid ModifyReqBody body) {
 
         Post post = postService.getItem(id).get();
         postService.modify(post, body.title(), body.content());
 
-        return new RsData(
+        return new RsData<> (
                 "200-1",
-                "%d번 글 수정이 완료되었습니다.".formatted(id)
+                "%d번 글 수정이 완료되었습니다.".formatted(id),
+                null
         );
     }
 
     record WriteReqBody (@NotBlank @Length(min=3) String title, @NotBlank @Length(min=3) String content) { }
 
+    record WriteResBody(long id, long totalCount) { }
+
     @PostMapping
-    public RsData write(@RequestBody @Valid WriteReqBody body) {
+    public ResponseEntity<RsData<WriteResBody>> write(@RequestBody @Valid WriteReqBody body) {
 
         Post post = postService.write(body.title(), body.content());
 
-        return new RsData(
-                "200-1",
-                "글 작성이 완료되었습니다.",
-                post.getId()
+        // 바디
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(
+                    new RsData<> (
+                        "200-1",
+                        "글 작성이 완료되었습니다.",
+                        new WriteResBody(
+                                post.getId(),
+                                postService.count()
+                    )
+                )
+
         );
     }
 }
