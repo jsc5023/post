@@ -1,6 +1,7 @@
 
 package com.example.rest.global;
 
+import com.example.rest.domain.member.member.entity.Member;
 import com.example.rest.domain.member.member.service.MemberService;
 import com.example.rest.domain.post.post.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -52,9 +53,12 @@ public class BaseInitData {
             return;
         }
 
-        postService.write("title1", "content1");
-        postService.write("title2", "content2");
-        postService.write("title3", "content3");
+        Member user1 = memberService.findByUsername("user1").get();
+        Member user2 = memberService.findByUsername("user2").get();
+
+        postService.write(user1,"title1", "content1");
+        postService.write(user1,"title2", "content2");
+        postService.write(user2,"title3", "content3");
 
     }
 }

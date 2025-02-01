@@ -2,6 +2,7 @@ package com.example.rest.global.exception;
 
 import com.example.rest.global.app.AppConfig;
 import com.example.rest.global.dto.RsData;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -45,6 +46,22 @@ public class GlobalExceptionHandler {
                         new RsData<>(
                                 "400-1",
                                 message
+                        )
+                );
+    }
+
+    @ExceptionHandler(ServiceException.class)
+    public ResponseEntity<RsData<Void>> IllegalArgumentExceptionHandle(ServiceException ex) {
+
+        // 개발 모드에서만 작동되도록
+        if(AppConfig.isNotProd()) ex.printStackTrace();
+
+        return ResponseEntity
+                .status(ex.getStatusCode())
+                .body(
+                        new RsData<>(
+                                ex.getCode(),
+                                ex.getMsg()
                         )
                 );
     }
