@@ -20,6 +20,7 @@ public class MemberDto {
         this.id = member.getId();
         this.createdDate = member.getCreatedDate();
         this.modifiedDate = member.getModifiedDate();
+
         this.nickname = member.getNickname();
     }
 }

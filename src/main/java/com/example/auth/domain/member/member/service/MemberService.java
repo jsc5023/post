@@ -2,6 +2,7 @@ package com.example.auth.domain.member.member.service;
 
 import com.example.auth.domain.member.member.entity.Member;
 import com.example.auth.domain.member.member.repository.MemberRepository;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
