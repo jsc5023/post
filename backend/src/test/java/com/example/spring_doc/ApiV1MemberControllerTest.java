@@ -1,8 +1,8 @@
-package com.example.jwt;
+package com.example.spring_doc;
 
-import com.example.jwt.domain.member.member.controller.ApiV1MemberController;
-import com.example.jwt.domain.member.member.entity.Member;
-import com.example.jwt.domain.member.member.service.MemberService;
+import com.example.spring_doc.domain.member.member.controller.ApiV1MemberController;
+import com.example.spring_doc.domain.member.member.entity.Member;
+import com.example.spring_doc.domain.member.member.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -311,6 +311,7 @@ public class ApiV1MemberControllerTest {
                 .andExpect(jsonPath("$.msg").value("내 정보 조회가 완료되었습니다."));
 
         checkMember(resultActions, loginedMember);
+
     }
 
     @Test
@@ -345,6 +346,7 @@ public class ApiV1MemberControllerTest {
                 .andExpect(jsonPath("$.msg").value("내 정보 조회가 완료되었습니다."));
 
         checkMember(resultActions, loginedMember);
+
     }
 
     @Test
@@ -360,12 +362,12 @@ public class ApiV1MemberControllerTest {
                 .andExpect(handler().methodName("logout"))
                 .andExpect(jsonPath("$.code").value("200-1"))
                 .andExpect(jsonPath("$.msg").value("로그아웃 되었습니다."));
+
+
         resultActions.
                 andExpect(
                         mvcResult -> {
-
                             Cookie apiKey = mvcResult.getResponse().getCookie("apiKey");
-
                             assertThat(apiKey).isNotNull();
                             assertThat(apiKey.getMaxAge()).isZero();
 
@@ -374,7 +376,7 @@ public class ApiV1MemberControllerTest {
                             assertThat(accessToken.getMaxAge()).isZero();
                         }
                 );
-    }
 
+    }
 
 }

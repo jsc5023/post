@@ -1,11 +1,11 @@
-package com.example.jwt;
+package com.example.spring_doc;
 
-import com.example.jwt.domain.member.member.entity.Member;
-import com.example.jwt.domain.member.member.service.MemberService;
-import com.example.jwt.domain.post.comment.controller.ApiV1CommentController;
-import com.example.jwt.domain.post.comment.entity.Comment;
-import com.example.jwt.domain.post.post.entity.Post;
-import com.example.jwt.domain.post.post.service.PostService;
+import com.example.spring_doc.domain.member.member.entity.Member;
+import com.example.spring_doc.domain.member.member.service.MemberService;
+import com.example.spring_doc.domain.post.comment.controller.ApiV1CommentController;
+import com.example.spring_doc.domain.post.comment.entity.Comment;
+import com.example.spring_doc.domain.post.post.entity.Post;
+import com.example.spring_doc.domain.post.post.service.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

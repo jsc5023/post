@@ -1,9 +1,9 @@
-package com.example.jwt.global;
+package com.example.spring_doc.global;
 
-import com.example.jwt.domain.member.member.entity.Member;
-import com.example.jwt.domain.member.member.service.MemberService;
-import com.example.jwt.global.exception.ServiceException;
-import com.example.jwt.global.security.SecurityUser;
+import com.example.spring_doc.domain.member.member.entity.Member;
+import com.example.spring_doc.domain.member.member.service.MemberService;
+import com.example.spring_doc.global.exception.ServiceException;
+import com.example.spring_doc.global.security.SecurityUser;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,9 +26,11 @@ public class Rq {
     private final MemberService memberService;
 
     public void setLogin(Member actor) {
+
         // 유저 정보 생성
         UserDetails user = new SecurityUser(actor.getId(), actor.getUsername(), "", actor.getAuthorities());
 
+        // 인증 정보 저장소
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities())
         );
@@ -80,15 +82,15 @@ public class Rq {
     }
 
     public void addCookie(String name, String value) {
-        Cookie accessTokenCookie = new Cookie(name, value);
+        Cookie accsessTokenCookie = new Cookie(name, value);
 
-        accessTokenCookie.setDomain("localhost");
-        accessTokenCookie.setPath("/");
-        accessTokenCookie.setHttpOnly(true);
-        accessTokenCookie.setSecure(true);
-        accessTokenCookie.setAttribute("SameSite", "Strict");
+        accsessTokenCookie.setDomain("localhost");
+        accsessTokenCookie.setPath("/");
+        accsessTokenCookie.setHttpOnly(true);
+        accsessTokenCookie.setSecure(true);
+        accsessTokenCookie.setAttribute("SameSite", "Strict");
 
-        response.addCookie(accessTokenCookie);
+        response.addCookie(accsessTokenCookie);
     }
 
     public Member getRealActor(Member actor) {
