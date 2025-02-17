@@ -114,6 +114,9 @@ public class ApiV1PostController {
             post.canRead(actor);
         }
 
+        PostWithContentDto postWithContentDto = new PostWithContentDto(post);
+        postWithContentDto.setCanActorHandle(post.getHandleAuthority(rq.getActor()));
+
         return new RsData<>(
                 "200-1",
                 "%d번 글을 조회하였습니다.".formatted(id),
@@ -147,16 +150,16 @@ public class ApiV1PostController {
         );
     }
 
-    record ModifyReqBody(@NotBlank String title, @NotBlank String content) {
+    record PostModifyReqBody(@NotBlank String title, @NotBlank String content, boolean published, boolean listed) {
     }
 
     @Operation(
             summary = "글 수정",
             description = "작성자와 관리자만 글 수정 가능"
     )
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     @Transactional
-    public RsData<PostWithContentDto> modify(@PathVariable long id, @RequestBody @Valid ModifyReqBody reqBody) {
+    public RsData<PostWithContentDto> modify(@PathVariable long id, @RequestBody @Valid PostModifyReqBody reqBody) {
 
         Member actor = rq.getActor(); // 야매
 
@@ -166,7 +169,7 @@ public class ApiV1PostController {
 
         post.canModify(actor);
 
-        postService.modify(post, reqBody.title(), reqBody.content());
+        postService.modify(post, reqBody.title(), reqBody.content(), reqBody.published(), reqBody.listed());
 
         return new RsData<>(
                 "200-1",

@@ -29,11 +29,11 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
+                                .requestMatchers("/api/*/members/login", "/api/*/members/join", "/api/*/members/logout")
+                                .permitAll()
                                 .requestMatchers("/h2-console/**")
                                 .permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/*/posts/{id:\\d+}", "/api/*/posts", "/api/*/posts/{postId:\\d+}/comments")
-                                .permitAll()
-                                .requestMatchers("/api/*/members/login", "/api/*/members/join", "/api/*/members/logout")
                                 .permitAll()
                                 .requestMatchers("/api/v1/posts/statistics")
                                 .hasRole("ADMIN")
@@ -78,6 +78,7 @@ public class SecurityConfig {
         ;
         return http.build();
     }
+
 
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
