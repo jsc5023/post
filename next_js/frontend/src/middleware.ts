@@ -1,11 +1,39 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import client from "./lib/backend/client";
 import { cookies } from "next/headers";
+import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 export async function middleware(request: NextRequest) {
   const myCookies = await cookies();
   const accessToken = myCookies.get("accessToken");
+  const { isLogin, isExpired, payload } = parseAccessToken(accessToken);
 
+  if (isLogin && isExpired) {
+    return refreshAccessToken();
+  }
+
+  if (!isLogin && isProtectedRoute(request.nextUrl.pathname)) {
+    return createUnauthorizedResponse();
+  }
+}
+
+async function refreshAccessToken() {
+  const nextResponse = NextResponse.next();
+
+  const response = await client.GET("/api/v1/members/me", {
+    headers: {
+      cookie: (await cookies()).toString(),
+    },
+  });
+
+  const springCookie = response.response.headers.getSetCookie();
+
+  nextResponse.headers.set("set-cookie", String(springCookie));
+
+  return nextResponse;
+}
+
+function parseAccessToken(accessToken: RequestCookie | undefined) {
   let isExpired = true;
   let payload = null;
 
@@ -13,33 +41,16 @@ export async function middleware(request: NextRequest) {
     try {
       const tokenParts = accessToken.value.split(".");
       payload = JSON.parse(Buffer.from(tokenParts[1], "base64").toString());
-      const expTimestamp = payload.exp * 1000;
+      const expTimestamp = payload.exp * 1000; // exp는 초 단위이므로 밀리초로 변환
       isExpired = Date.now() > expTimestamp;
-      console.log("토큰 만료 여부:", isExpired);
     } catch (e) {
-      console.error("토큰 파싱 중 오류 발생 :", e);
+      console.error("토큰 파싱 중 오류 발생:", e);
     }
   }
 
-  let isLogin = payload != null;
+  let isLogin = payload !== null;
 
-  console.log("------------------");
-  console.log(isLogin, isExpired);
-  if (isLogin && isExpired) {
-    const nextResponse = NextResponse.next();
-    const response = await client.GET("/api/v1/members/me", {
-      headers: {
-        cookie: (await cookies()).toString(),
-      },
-    });
-    const springCookie = response.response.headers.getSetCookie();
-    nextResponse.headers.set("set-cookie", String(springCookie));
-    return nextResponse;
-  }
-
-  if (!isLogin && isProtectedRoute(request.nextUrl.pathname)) {
-    return createUnauthorizedResponse();
-  }
+  return { isLogin, isExpired, payload };
 }
 
 function isProtectedRoute(pathname: string): boolean {
@@ -56,7 +67,6 @@ function createUnauthorizedResponse(): NextResponse {
     },
   });
 }
-
 export const config = {
   matcher: "/((?!.*\\.|api\\/).*)",
 };
