@@ -55,7 +55,9 @@ public class ApiV1MemberController {
 
     record LoginResBody(@NonNull MemberDto item, @NonNull String apiKey, @NonNull String accessToken) {}
 
-    @Operation(summary = "로그인", description = "로그인 성공 시 ApiKey와 AccessToken 반환. 쿠키로도 반환")
+
+
+
     @PostMapping("/login")
     public RsData<LoginResBody> login(@RequestBody @Valid LoginReqBody reqBody, HttpServletResponse response) {
 

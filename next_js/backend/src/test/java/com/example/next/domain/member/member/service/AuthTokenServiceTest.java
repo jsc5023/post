@@ -77,7 +77,6 @@ public class AuthTokenServiceTest {
         assertThat(parsedPayload).containsAllEntriesOf(
                 Map.of("id", member.getId(), "username", member.getUsername())
         );
-
     }
 
 }
