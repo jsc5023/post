@@ -1,12 +1,13 @@
 package domain.wiseSaying.repository
 
 import domain.wiseSaying.entity.WiseSaying
+import standard.Page
 
-class WiseSayingMemRepository {
+class WiseSayingMemRepository : WiseSayingRepository {
     private var lastId: Int = 0
     private val wiseSayings = mutableListOf<WiseSaying>()
 
-    fun save(wiseSaying: WiseSaying): WiseSaying {
+    override fun save(wiseSaying: WiseSaying): WiseSaying {
         if(wiseSaying.isNew()) {
             val new = wiseSaying.copy(id = ++lastId)
             wiseSayings.add(new)
@@ -20,20 +21,36 @@ class WiseSayingMemRepository {
         return wiseSaying
     }
 
-    fun findAll(): List<WiseSaying> {
+    override fun findAll(): List<WiseSaying> {
         return wiseSayings.toList()
     }
 
-    fun delete(wiseSaying: WiseSaying) {
+    override fun delete(wiseSaying: WiseSaying) {
         wiseSayings.remove(wiseSaying)
     }
 
-    fun findById(id: Int): WiseSaying? {
+    override fun findById(id: Int): WiseSaying? {
         return wiseSayings.find { it.id == id }
     }
 
-    fun clear() {
+    override fun clear() {
         wiseSayings.clear()
         lastId = 0
+    }
+
+    override fun findByAuthorLike(keyword: String): List<WiseSaying> {
+        TODO("Not yet implemented")
+    }
+
+    override fun findBySayingLike(keyword: String): List<WiseSaying> {
+        TODO("Not yet implemented")
+    }
+
+    override fun findByAuthorLikePaged(keyword: String, page: Int, pageSize: Int): Page {
+        TODO("Not yet implemented")
+    }
+
+    override fun findBySayingLikePaged(keyword: String, page: Int, pageSize: Int): Page {
+        TODO("Not yet implemented")
     }
 }

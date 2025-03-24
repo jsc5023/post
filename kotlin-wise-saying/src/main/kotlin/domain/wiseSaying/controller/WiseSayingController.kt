@@ -18,12 +18,38 @@ class WiseSayingController{
         println("${wiseSaying.id}번 명언이 등록되었습니다.")
     }
 
-    fun list() {
+    fun list(rq: Request) {
+
+        val currentPageNo = rq.getParamDefault("page", "1").toInt()
+        val keyword = rq.getParamDefault("keyword", "")
+        val keywordType = rq.getParamDefault("keywordType", "saying")
+        val pageSize = 5
+
+        if (keyword.isNotBlank()) {
+            println(
+                """
+                ----------------------
+                검색타입 : $keywordType
+                검색어 : $keyword
+                ----------------------
+            """.trimIndent()
+            )
+        }
+
         println("번호 / 작가 / 명언")
         println("----------------------")
-        wiseSayingService.getItems().forEach {
+
+        val page = wiseSayingService.findByKeywordPaged(keywordType, keyword, currentPageNo, pageSize)
+
+        page.content.forEach {
             println("${it.id} / ${it.author} / ${it.saying}")
         }
+
+        val pageMenu = (1 .. page.totalPages).joinToString(" ") { i ->
+            if(i == currentPageNo) "[${i}]" else "$i"
+        }
+
+        println("페이지 : $pageMenu")
     }
 
     fun delete(rq: Request) {
@@ -64,5 +90,10 @@ class WiseSayingController{
             wiseSayingService.modify(wiseSaying, saying, author)
             println("${id}번 명언을 수정했습니다.")
         } ?: println("${id}번 명언은 존재하지 않습니다.")
+    }
+
+    fun build() {
+        wiseSayingService.build()
+        println("data.json 파일의 내용이 갱신되었습니다.")
     }
 }

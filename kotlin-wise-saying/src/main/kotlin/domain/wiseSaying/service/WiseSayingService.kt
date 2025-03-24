@@ -2,6 +2,7 @@ package domain.wiseSaying.service
 
 import domain.wiseSaying.entity.WiseSaying
 import global.SingletonScope
+import standard.Page
 
 class WiseSayingService(
 
@@ -27,5 +28,23 @@ class WiseSayingService(
 
     fun modify(wiseSaying: WiseSaying, saying: String, author: String): WiseSaying {
         return wiseSayingRepository.save(wiseSaying.copy(saying = saying, author = author))
+    }
+
+    fun build() {
+        wiseSayingRepository.build()
+    }
+
+    fun findByKeyword(keywordType: String, keyword: String): List<WiseSaying> {
+        return when (keywordType) {
+            "author" -> return wiseSayingRepository.findByAuthorLike(keyword)
+            else -> return wiseSayingRepository.findBySayingLike(keyword)
+        }
+    }
+
+    fun findByKeywordPaged(keywordType: String, keyword: String, page: Int, pageSize: Int): Page {
+        return when (keywordType) {
+            "author" -> wiseSayingRepository.findByAuthorLikePaged(keyword, page, pageSize)
+            else -> wiseSayingRepository.findBySayingLikePaged(keyword, page, pageSize)
+        }
     }
 }

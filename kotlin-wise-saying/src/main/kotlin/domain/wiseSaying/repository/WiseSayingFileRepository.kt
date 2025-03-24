@@ -2,6 +2,8 @@ package domain.wiseSaying.repository
 
 import domain.wiseSaying.entity.WiseSaying
 import global.AppConfig
+import standard.JsonUtil
+import standard.Page
 import java.nio.file.Path
 
 class WiseSayingFileRepository : WiseSayingRepository {
@@ -32,6 +34,7 @@ class WiseSayingFileRepository : WiseSayingRepository {
             .listFiles()
             ?.filter { it.extension == "json"}
             ?.map { WiseSaying.fromJson(it.readText()) }
+            ?.sortedByDescending { it.id }
             .orEmpty()
     }
 
@@ -43,12 +46,81 @@ class WiseSayingFileRepository : WiseSayingRepository {
             }
     }
 
+    override fun findByAuthorLike(keyword: String): List<WiseSaying> {
+
+        if (keyword.isBlank()) {
+            return findAll()
+        }
+
+        return findAll()
+            .filter { it.author.contains(keyword) }
+    }
+
+    override fun findBySayingLike(keyword: String): List<WiseSaying> {
+
+        if (keyword.isBlank()) {
+            return findAll()
+        }
+
+        return findAll()
+            .filter { it.saying.contains(keyword) }
+    }
+
     override fun delete(wiseSaying: WiseSaying) {
         tableDirPath.resolve("${wiseSaying.id}.json").toFile().delete()
     }
 
     override fun clear() {
         tableDirPath.toFile().deleteRecursively()
+    }
+
+    fun findAllPaged(page: Int, pageSize: Int): List<WiseSaying> {
+        return findAll()
+            .drop((page - 1) * pageSize)
+            .take(pageSize)
+    }
+
+    override fun findByAuthorLikePaged(keyword: String, page: Int, pageSize: Int): Page {
+
+        var totalCount = findAll().size
+
+        if (keyword.isBlank()) {
+            return findAllPaged(page, pageSize).let {
+                Page(it, totalCount, page, pageSize)
+            }
+        }
+
+        val searchedWiseSayings = findAll()
+            .filter { it.author.contains(keyword) }
+
+        totalCount = searchedWiseSayings.size
+
+        val content = searchedWiseSayings
+            .drop((page - 1) * pageSize)
+            .take(pageSize)
+
+        return Page(content,totalCount, page, pageSize)
+    }
+
+    override fun findBySayingLikePaged(keyword: String, page: Int, pageSize: Int): Page {
+        var totalCount = findAll().size
+
+        if (keyword.isBlank()) {
+            return findAllPaged(page, pageSize).let {
+                Page(it, totalCount, page, pageSize)
+            }
+        }
+
+        val searchedWiseSayings = findAll()
+            .filter { it.saying.contains(keyword) }
+
+        totalCount = searchedWiseSayings.size
+
+        val content = searchedWiseSayings
+            .drop((page - 1) * pageSize)
+            .take(pageSize)
+
+        return Page(content,totalCount, page, pageSize)
     }
 
     fun saveLastId(id: Int) {
@@ -76,5 +148,17 @@ class WiseSayingFileRepository : WiseSayingRepository {
                 mkdirs()
             }
         }
+    }
+
+    fun build() {
+        val mapList = findAll().map {
+            it.map
+        }
+
+        val rst = JsonUtil.listToJson(mapList).also {
+            tableDirPath.resolve("data.json").toFile().writeText(it)
+        }
+
+        println(rst)
     }
 }
