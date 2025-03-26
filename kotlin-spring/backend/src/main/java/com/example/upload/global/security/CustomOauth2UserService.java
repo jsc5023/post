@@ -1,8 +1,8 @@
 package com.example.upload.global.security;
 
-import com.example.upload.domain.member.member.entity.Member;
-import com.example.upload.domain.member.member.service.MemberService;
-import lombok.RequiredArgsConstructor;
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -10,8 +10,10 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
-import java.util.Optional;
+import com.example.upload.domain.member.member.entity.Member;
+import com.example.upload.domain.member.member.service.MemberService;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

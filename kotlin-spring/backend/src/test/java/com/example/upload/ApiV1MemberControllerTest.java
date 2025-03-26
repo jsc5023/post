@@ -1,9 +1,12 @@
 package com.example.upload;
 
-import com.example.upload.domain.member.member.controller.ApiV1MemberController;
-import com.example.upload.domain.member.member.entity.Member;
-import com.example.upload.domain.member.member.service.MemberService;
-import jakarta.servlet.http.Cookie;
+import static org.assertj.core.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.nio.charset.StandardCharsets;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,12 +19,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.charset.StandardCharsets;
+import com.example.upload.domain.member.member.controller.ApiV1MemberController;
+import com.example.upload.domain.member.member.entity.Member;
+import com.example.upload.domain.member.member.service.MemberService;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import jakarta.servlet.http.Cookie;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -50,7 +52,7 @@ public class ApiV1MemberControllerTest {
                 .andExpect(jsonPath("$.data").exists())
                 .andExpect(jsonPath("$.data.id").value(member.getId()))
                 .andExpect(jsonPath("$.data.nickname").value(member.getNickname()))
-                .andExpect(jsonPath("$.data.profileImgUrl").value(member.getProfileImgUrlOrDefaultUrl()));
+                .andExpect(jsonPath("$.data.profileImgUrl").value(member.getProfileImgUrlOrDefault()));
     }
 
     private ResultActions joinRequest(String username, String password, String nickname) throws Exception {
@@ -182,7 +184,7 @@ public class ApiV1MemberControllerTest {
                 .andExpect(jsonPath("$.data.item.nickname").value(member.getNickname()))
                 .andExpect(jsonPath("$.data.apiKey").value(member.getApiKey()))
                 .andExpect(jsonPath("$.data.accessToken").exists())
-                .andExpect(jsonPath("$.data.item.profileImgUrl").value(member.getProfileImgUrlOrDefaultUrl()));
+                .andExpect(jsonPath("$.data.item.profileImgUrl").value(member.getProfileImgUrlOrDefault()));
 
         resultActions
                 .andExpect(mvcResult -> {

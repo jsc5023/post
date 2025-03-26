@@ -1,13 +1,12 @@
 package com.example.upload.domain.post.genFile.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.example.upload.domain.member.member.service.MemberService;
-import com.example.upload.domain.post.genFile.entity.PostGenFile;
-import com.example.upload.domain.post.post.entity.Post;
-import com.example.upload.domain.post.post.service.PostService;
-import com.example.upload.global.app.AppConfig;
-import com.example.upload.standard.util.SampleResource;
-import com.example.upload.standard.util.Ut;
+import java.io.FileInputStream;
+import java.util.List;
+
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,13 +20,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.FileInputStream;
-import java.util.List;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.example.upload.domain.member.member.service.MemberService;
+import com.example.upload.domain.post.genFile.entity.PostGenFile;
+import com.example.upload.domain.post.post.entity.Post;
+import com.example.upload.domain.post.post.service.PostService;
+import com.example.upload.global.app.AppConfig;
+import com.example.upload.standard.util.SampleResource;
+import com.example.upload.standard.util.Ut;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -62,8 +61,8 @@ public class ApiV1PostGenFileControllerTest {
             PostGenFile postGenFile = postGenFiles.get(i);
             resultActions
                     .andExpect(jsonPath("$[%d].id".formatted(i)).value(postGenFile.getId()))
-                    .andExpect(jsonPath("$[%d].createDate".formatted(i)).value(Matchers.startsWith(postGenFile.getCreatedDate().toString().substring(0, 20))))
-                    .andExpect(jsonPath("$[%d].modifyDate".formatted(i)).value(Matchers.startsWith(postGenFile.getModifiedDate().toString().substring(0, 20))))
+                    .andExpect(jsonPath("$[%d].createdDate".formatted(i)).value(Matchers.startsWith(postGenFile.getCreatedDate().toString().substring(0, 20))))
+                    .andExpect(jsonPath("$[%d].modifiedDate".formatted(i)).value(Matchers.startsWith(postGenFile.getModifiedDate().toString().substring(0, 20))))
                     .andExpect(jsonPath("$[%d].postId".formatted(i)).value(postGenFile.getPost().getId()))
                     .andExpect(jsonPath("$[%d].typeCode".formatted(i)).value(postGenFile.getTypeCode().toString()))
                     .andExpect(jsonPath("$[%d].fileExtTypeCode".formatted(i)).value(postGenFile.getFileExtTypeCode()))
@@ -102,8 +101,8 @@ public class ApiV1PostGenFileControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.msg").value("1개의 파일이 생성되었습니다."))
                 .andExpect(jsonPath("$.data[0].id").isNumber())
-                .andExpect(jsonPath("$.data[0].createDate").isString())
-                .andExpect(jsonPath("$.data[0].modifyDate").isString())
+                .andExpect(jsonPath("$.data[0].createdDate").isString())
+                .andExpect(jsonPath("$.data[0].modifiedDate").isString())
                 .andExpect(jsonPath("$.data[0].postId").value(9))
                 .andExpect(jsonPath("$.data[0].typeCode").value(PostGenFile.TypeCode.attachment.name()))
                 .andExpect(jsonPath("$.data[0].fileExtTypeCode").value(SampleResource.IMG_JPG_SAMPLE1.getFileExtTypeCode()))
@@ -142,8 +141,8 @@ public class ApiV1PostGenFileControllerTest {
                 .andExpect(jsonPath("$.code").value("201-1"))
                 .andExpect(jsonPath("$.msg").value("2개의 파일이 생성되었습니다."))
                 .andExpect(jsonPath("$.data[0].id").isNumber())
-                .andExpect(jsonPath("$.data[0].createDate").isString())
-                .andExpect(jsonPath("$.data[0].modifyDate").isString())
+                .andExpect(jsonPath("$.data[0].createdDate").isString())
+                .andExpect(jsonPath("$.data[0].modifiedDate").isString())
                 .andExpect(jsonPath("$.data[0].postId").value(9))
                 .andExpect(jsonPath("$.data[0].typeCode").value(PostGenFile.TypeCode.attachment.name()))
                 .andExpect(jsonPath("$.data[0].fileExtTypeCode").value(SampleResource.IMG_JPG_SAMPLE1.getFileExtTypeCode()))
@@ -157,8 +156,8 @@ public class ApiV1PostGenFileControllerTest {
                 .andExpect(jsonPath("$.data[0].publicUrl").isString())
                 .andExpect(jsonPath("$.data[0].fileName").isString())
                 .andExpect(jsonPath("$.data[0].id").isNumber())
-                .andExpect(jsonPath("$.data[1].createDate").isString())
-                .andExpect(jsonPath("$.data[1].modifyDate").isString())
+                .andExpect(jsonPath("$.data[1].createdDate").isString())
+                .andExpect(jsonPath("$.data[1].modifiedDate").isString())
                 .andExpect(jsonPath("$.data[1].postId").value(9))
                 .andExpect(jsonPath("$.data[1].typeCode").value(PostGenFile.TypeCode.attachment.name()))
                 .andExpect(jsonPath("$.data[1].fileExtTypeCode").value(SampleResource.IMG_JPG_SAMPLE2.getFileExtTypeCode()))

@@ -1,7 +1,13 @@
 package com.example.upload.domain.post.post.repository;
 
+import static com.example.upload.domain.post.post.entity.QPost.*;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
+
 import com.example.upload.domain.member.member.entity.Member;
-import com.example.upload.domain.post.post.controller.SearchKeywordType;
+import com.example.upload.standard.search.SearchKeywordType;
 import com.example.upload.domain.post.post.dto.PostListParamDto;
 import com.example.upload.domain.post.post.entity.Post;
 import com.querydsl.core.BooleanBuilder;
@@ -10,12 +16,8 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
 
-import static com.example.upload.domain.post.post.entity.QPost.post;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CustomPostRepositoryImpl implements CustomPostRepository {

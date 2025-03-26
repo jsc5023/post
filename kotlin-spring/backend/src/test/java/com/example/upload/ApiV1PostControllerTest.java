@@ -1,12 +1,13 @@
 package com.example.upload;
 
-import com.example.upload.domain.member.member.entity.Member;
-import com.example.upload.domain.member.member.service.MemberService;
-import com.example.upload.domain.post.post.controller.ApiV1PostController;
-import com.example.upload.domain.post.post.controller.SearchKeywordType;
-import com.example.upload.domain.post.post.dto.PostListParamDto;
-import com.example.upload.domain.post.post.entity.Post;
-import com.example.upload.domain.post.post.service.PostService;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,13 +23,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-
-import static org.hamcrest.Matchers.matchesPattern;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.example.upload.domain.member.member.entity.Member;
+import com.example.upload.domain.member.member.service.MemberService;
+import com.example.upload.domain.post.post.controller.ApiV1PostController;
+import com.example.upload.standard.search.SearchKeywordType;
+import com.example.upload.domain.post.post.dto.PostListParamDto;
+import com.example.upload.domain.post.post.entity.Post;
+import com.example.upload.domain.post.post.service.PostService;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -61,8 +62,8 @@ public class ApiV1PostControllerTest {
                 .andExpect(jsonPath("$.data.content").value(post.getContent()))
                 .andExpect(jsonPath("$.data.authorId").value(post.getAuthor().getId()))
                 .andExpect(jsonPath("$.data.authorName").value(post.getAuthor().getNickname()))
-                .andExpect(jsonPath("$.data.published").value(post.isPublished()))
-                .andExpect(jsonPath("$.data.listed").value(post.isListed()))
+                .andExpect(jsonPath("$.data.published").value(post.getPublished()))
+                .andExpect(jsonPath("$.data.listed").value(post.getListed()))
                 .andExpect(jsonPath("$.data.createdDate").value(matchesPattern(post.getCreatedDate().toString().replaceAll("0+$", "") + ".*")))
                 .andExpect(jsonPath("$.data.modifiedDate").value(matchesPattern(post.getModifiedDate().toString().replaceAll("0+$", "") + ".*")));
     }
@@ -81,8 +82,8 @@ public class ApiV1PostControllerTest {
                     .andExpect(jsonPath("$.data.items[%d].content".formatted(i)).doesNotExist())
                     .andExpect(jsonPath("$.data.items[%d].authorId".formatted(i)).value(post.getAuthor().getId()))
                     .andExpect(jsonPath("$.data.items[%d].authorName".formatted(i)).value(post.getAuthor().getNickname()))
-                    .andExpect(jsonPath("$.data.items[%d].published".formatted(i)).value(post.isPublished()))
-                    .andExpect(jsonPath("$.data.items[%d].listed".formatted(i)).value(post.isListed()))
+                    .andExpect(jsonPath("$.data.items[%d].published".formatted(i)).value(post.getPublished()))
+                    .andExpect(jsonPath("$.data.items[%d].listed".formatted(i)).value(post.getListed()))
                     .andExpect(jsonPath("$.data.items[%d].createdDate".formatted(i)).value(matchesPattern(post.getCreatedDate().toString().replaceAll("0+$", "") + ".*")))
                     .andExpect(jsonPath("$.data.items[%d].modifiedDate".formatted(i)).value(matchesPattern(post.getModifiedDate().toString().replaceAll("0+$", "") + ".*")));
         }

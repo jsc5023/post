@@ -1,8 +1,5 @@
 package com.example.upload.global.app;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
-import lombok.SneakyThrows;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,19 +7,33 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.Getter;
+import lombok.SneakyThrows;
+
 @Configuration
 public class AppConfig {
 
-    @Getter
     public static ObjectMapper objectMapper;
 
-    @Getter
+    public static ObjectMapper getObjectMapper() {
+        return objectMapper;
+    }
+
     public static String genFileDirPath;
+
+    public static String getGenFileDirPath() {
+        return genFileDirPath;
+    }
 
     private static Environment environment;
 
-    @Getter
     private static String siteBackUrl;
+
+    public static String getSiteBackUrl() {
+        return siteBackUrl;
+    }
 
     @Value("${custom.site.backUrl}")
     public void setSiteBackUrl(String siteBackUrl) {
@@ -68,8 +79,11 @@ public class AppConfig {
         return System.getProperty("java.io.tmpdir");
     }
 
-    @Getter
     private static Tika tika;
+
+    public static Tika getTika() {
+        return tika;
+    }
 
     @Autowired
     public void setTika(Tika tika) {

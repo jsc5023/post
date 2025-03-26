@@ -1,5 +1,18 @@
 package com.example.upload.domain.post.post.controller;
 
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.lang.NonNull;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.upload.domain.member.member.entity.Member;
 import com.example.upload.domain.post.post.dto.PageDto;
 import com.example.upload.domain.post.post.dto.PostDto;
@@ -11,17 +24,13 @@ import com.example.upload.global.Rq;
 import com.example.upload.global.dto.Empty;
 import com.example.upload.global.dto.RsData;
 import com.example.upload.global.exception.ServiceException;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
-import org.springframework.lang.NonNull;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
 
 @SecurityRequirement(name = "bearerAuth")
 @Tag(name = "ApiV1PostController", description = "글 API")
@@ -101,7 +110,7 @@ public class ApiV1PostController {
                 () -> new ServiceException("404-1", "존재하지 않는 글입니다.")
         );
 
-        if (!post.isPublished()) {
+        if (!post.getPublished()) {
             Member actor = rq.getActor();
             post.canRead(actor);
         }

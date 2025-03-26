@@ -1,5 +1,12 @@
 package com.example.upload.global.init;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.upload.domain.member.member.entity.Member;
 import com.example.upload.domain.member.member.service.MemberService;
 import com.example.upload.domain.post.genFile.entity.PostGenFile;
@@ -8,13 +15,8 @@ import com.example.upload.domain.post.post.service.PostService;
 import com.example.upload.global.app.AppConfig;
 import com.example.upload.standard.util.SampleResource;
 import com.example.upload.standard.util.Ut;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.transaction.annotation.Transactional;
 
 @Configuration
 @RequiredArgsConstructor
