@@ -1,21 +1,22 @@
-package com.example.upload.global.aspect;
+package com.example.upload.global.aspect
 
-import com.example.upload.global.dto.RsData;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.springframework.stereotype.Component;
+import com.example.upload.global.dto.RsData
+import jakarta.servlet.http.HttpServletResponse
+import lombok.RequiredArgsConstructor
+import org.aspectj.lang.ProceedingJoinPoint
+import org.aspectj.lang.annotation.Around
+import org.aspectj.lang.annotation.Aspect
+import org.springframework.stereotype.Component
 
 @Aspect
 @Component
 @RequiredArgsConstructor
-public class ResponseAspect {
+class ResponseAspect(
+    private val response: HttpServletResponse
+) {
 
-    private final HttpServletResponse response;
-
-    @Around("""
+    @Around(
+        """
             (
                 within
                 (
@@ -34,16 +35,17 @@ public class ResponseAspect {
             )
             ||
             @annotation(org.springframework.web.bind.annotation.ResponseBody)
+            
             """)
-    public Object responseAspect(ProceedingJoinPoint joinPoint) throws Throwable {
-        Object rst = joinPoint.proceed(); // 실제 수행 메서드
+    fun responseAspect(joinPoint: ProceedingJoinPoint): Any {
 
-        if(rst instanceof RsData rsData) {
-            int statusCode = rsData.getStatusCode();
-            response.setStatus(statusCode);
+        val rst = joinPoint.proceed()
+
+        if (rst is RsData<*>) {
+            val statusCode: Int = rst.statusCode
+            response.status = statusCode
         }
 
-        return rst; // json으로 변환되어 응답
+        return rst
     }
-
 }
