@@ -7,6 +7,12 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 }
 
+sourceSets {
+	main {
+		java.srcDirs("src/main/kotlin", "src/main/java")
+	}
+}
+
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
 
@@ -50,7 +56,6 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
-
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("com.h2database:h2")
 

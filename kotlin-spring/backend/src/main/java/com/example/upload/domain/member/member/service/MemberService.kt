@@ -61,7 +61,7 @@ class MemberService(
         )
     }
 
-    fun genAccessToken(member: Member?): String {
+    fun genAccessToken(member: Member): String {
         return authTokenService.genAccessToken(member)
     }
 }
